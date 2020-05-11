@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: docker-build-listener
+  namespace: tekton-demo
+spec:
+  serviceAccountName: tekton-triggers-admin
+  triggers:
+    - bindings:
+      - name: docker-build-binding
+      template:
+        name: docker-build-template

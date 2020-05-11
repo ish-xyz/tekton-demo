@@ -1,0 +1,17 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: docker-build-binding
+  namespace: tekton-demo
+spec:
+  params:
+  - name: git-branch
+    value: $(body.head_commit.id)
+  - name: git-repo-url
+    value: $(body.repository.url)
+  - name: docker-image
+    value: 'ishario/nginx:latest'
+  - name: docker-hub-sa
+    value: docker-hub-ishario
+  - name: context
+    value: '/stable'
