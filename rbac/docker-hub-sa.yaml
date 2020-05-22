@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: docker-hub-ishario
-  namespace: tekton-demo
-secrets:
-- name: docker-hub-ishario

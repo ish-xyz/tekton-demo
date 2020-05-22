@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: get-graph-file
+  namespace: tekton-demo
+spec:
+  params:
+    - name: app-name
+      type: string
+  resources:
+    inputs:
+      - name: git-graph-files
+        type: git
+  results:
+    - name: graph-file
+      description: The versions found in the graph file
+  steps:
+    - name: create-candidate-version
+      image: busybox:1.31.1
+      command:
+        - cat $(resources.inputs.git-graph-files.path)/graph-files/$(app-name)/graph.source > /tekton/results/graph.source
+        - source $(resources.inputs.git-graph-files.path)/$(app-name)/graph.source
+        - echo "CANDIDATE_VERSION=$(( $DOCKER_IMAGE_VERSION + 1 ))" >> /tekton/results/graph.source
+
