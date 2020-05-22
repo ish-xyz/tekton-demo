@@ -10,17 +10,17 @@ spec:
   - name: git-app-source-url
     value: $(body.repository.url)
   - name: dockerfile-path
-    value: '/'
+    value: '/src'
+
   - name: docker-image
     value: 'ishario/tektoncd-demo'
   - name: service-account
     value: docker-hub-sa
+
+  - name: git-graph-files-rev
+    value: master
+  - name: git-graph-files-url
+    value: https://github.com/ish-xyz/tekton-demo.git
   - name: app-name
     value: 'tekton-demo'
 
-
-  - name: git-graph-files-rev
-  - name: git-graph-files-url
-  - name: app-name
-  - name: git-app-source-rev
-  - name: git-app-source-url
