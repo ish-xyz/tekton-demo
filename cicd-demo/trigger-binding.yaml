@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: docker-build-binding
+  name: tekton-demo-app-ci
   namespace: tekton-demo
 spec:
   params:
@@ -12,15 +12,15 @@ spec:
   - name: dockerfile-path
     value: '/src'
 
-  - name: docker-image
+  - name: docker-app-image
     value: 'ishario/tektoncd-demo'
   - name: service-account
-    value: docker-hub-sa
+    value: docker-hub-ishario
 
   - name: git-graph-files-rev
     value: master
   - name: git-graph-files-url
     value: https://github.com/ish-xyz/tekton-demo.git
   - name: app-name
-    value: 'tekton-demo'
+    value: tekton-demo
 

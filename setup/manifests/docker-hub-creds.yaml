@@ -8,4 +8,12 @@ metadata:
 type: kubernetes.io/basic-auth
 stringData:
     username: ishario
-    password: ''
+    password: 'xxx'
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: docker-hub-ishario
+  namespace: tekton-demo
+secrets:
+- name: docker-hub-ishario

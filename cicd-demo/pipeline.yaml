@@ -9,7 +9,7 @@ spec:
     type: git
   - name: git-graph-files
     type: git
-  - name: docker-image
+  - name: docker-app-image
     type: image
   params:
     - name: context

@@ -12,5 +12,5 @@ spec:
         paths:
           - path: /tekton-demo
             backend:
-              serviceName: el-docker-build-listener
+              serviceName: el-tekton-demo-el
               servicePort: 8080

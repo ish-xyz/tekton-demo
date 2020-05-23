@@ -11,7 +11,7 @@ spec:
   - name: git-app-source-rev
   - name: git-app-source-url
   - name: dockerfile-path
-  - name: docker-image
+  - name: docker-app-image
 
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
@@ -40,12 +40,12 @@ spec:
           - name: url
             value: $(params.git-graph-files-url)
 
-      - name: docker-image
+      - name: docker-app-image
         resourceSpec:
           type: image
           params:
           - name: url
-            value: $(params.docker-image)
+            value: $(params.docker-app-image)
       params:
       - name: dockerfile-path
         value: $(params.dockerfile-path)
