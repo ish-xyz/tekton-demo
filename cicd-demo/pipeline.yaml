@@ -12,7 +12,7 @@ spec:
   - name: docker-app-image
     type: image
   params:
-    - name: context
+    - name: dockerfile-path
       type: string
     - name: app-name
       type: string
@@ -33,8 +33,8 @@ spec:
       taskRef:
         name: build-candidate
       params:
-        - name: context
-          value: "$(params.context)"
+        - name: dockerfile-path
+          value: "$(params.dockerfile-path)"
       resources:
         inputs:
           - name: git-app-source
