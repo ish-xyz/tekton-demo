@@ -5,28 +5,27 @@ metadata:
   namespace: tekton-demo
 spec:
   params:
-    - name: dockerfile-path
-      type: string
+  - name: dockerfile-path
+    type: string
+  - name: candidate-version
+    type: string
   resources:
     inputs:
-      - name: git-app-source
-        type: git
+    - name: git-app-source
+      type: git
     outputs:
-      - name: docker-app-image
-        type: image
+    - name: docker-app-image
+      type: image
   steps:
-    - name: build-push-candidate
-      image: gcr.io/kaniko-project/executor:v0.17.1
-      # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
-      env:
-        - name: "DOCKER_CONFIG"
-          value: "/tekton/home/.docker/"
-      command: [ 
-        'source /tekton/results/graph.source',
-        '[[ -z $CANDIDATE_VERSION ]] && CANDIDATE_VERSION=no-version', 
-        '/kaniko/executor'
-      ]
-      args:
-        - --dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile
-        - --destination=$(resources.outputs.docker-app-image.url):candidate-${CANDIDATE_VERSION}
-        - --context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)
+  - name: build-push-candidate
+    image: gcr.io/kaniko-project/executor:v0.17.1
+    # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
+    env:
+    - name: "DOCKER_CONFIG"
+      value: "/tekton/home/.docker/"
+    command:
+    - /kaniko/executor
+    args:
+    - --dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile
+    - --destination=$(resources.outputs.docker-app-image.url):$(params.candidate-version)
+    - --context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)

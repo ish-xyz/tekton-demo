@@ -49,3 +49,5 @@ spec:
       params:
       - name: dockerfile-path
         value: $(params.dockerfile-path)
+      - name: app-name
+        value: $(params.app-name)

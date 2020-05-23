@@ -13,7 +13,7 @@ spec:
     value: '/src'
 
   - name: docker-app-image
-    value: 'ishario/tektoncd-demo'
+    value: ishario/tektoncd-demo
   - name: service-account
     value: docker-hub-ishario
 
@@ -22,5 +22,5 @@ spec:
   - name: git-graph-files-url
     value: https://github.com/ish-xyz/tekton-demo.git
   - name: app-name
-    value: tekton-demo
+    value: 'tekton-demo'
 

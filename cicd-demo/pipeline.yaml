@@ -23,7 +23,7 @@ spec:
         name: get-graph-file
       params:
         - name: app-name
-          value: "$(params.app-name)"
+          value: $(params.app-name)
       resources:
         inputs:
           - name: git-graph-files
@@ -35,6 +35,8 @@ spec:
       params:
         - name: dockerfile-path
           value: "$(params.dockerfile-path)"
+        - name: candidate-version
+          value: $(tasks.get-graph-file.results.candidate-version)
       resources:
         inputs:
           - name: git-app-source
