@@ -16,16 +16,26 @@ spec:
     outputs:
     - name: docker-app-image
       type: image
+
   steps:
+  # - name: debug
+  #   image: bash:latest
+  #   script: |
+  #     #!/usr/bin/env bash
+  #     echo '$(params.candidate-version)' > debug.txt
+  #     sleep 3600
+  
   - name: build-push-candidate
-    image: gcr.io/kaniko-project/executor:v0.17.1
+    image: gcr.io/kaniko-project/executor:v0.20.0
     # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
     env:
     - name: "DOCKER_CONFIG"
       value: "/tekton/home/.docker/"
     command:
     - /kaniko/executor
-    args:
-    - --dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile
-    - --destination=$(resources.outputs.docker-app-image.url):$(params.candidate-version)
-    - --context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)
+    args: [
+      "--dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile",
+      "--destination=$(resources.outputs.docker-app-image.url):candidate-$(params.candidate-version)",
+      "--context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)"
+    ]
+

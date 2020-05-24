@@ -13,20 +13,22 @@ spec:
       type: git
   results:
   - name: current-version
-    description: The current date in unix timestamp format
+    description: Current artefact version
   - name: candidate-version
-    description: The current date in human readable format
+    description: Candidate artefact version
   steps:
   - name: store-candidate-version-number
     image: bash:latest
     script: |
       #!/usr/bin/env bash
       source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
-      echo "$(( $DOCKER_IMAGE_VERSION + 1 ))" | tee /tekton/results/candidate-version
+      echo "$(( $DOCKER_IMAGE_VERSION + 1 ))"
+      echo "$(( $DOCKER_IMAGE_VERSION + 1 ))" | tr -d '\n' | tee /tekton/results/candidate-version
 
   - name: store-current-version-number
     image: bash:latest
     script: |
       #!/usr/bin/env bash
       source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
-      echo $DOCKER_IMAGE_VERSION | tee /tekton/results/current-version
+      echo $DOCKER_IMAGE_VERSION
+      echo $DOCKER_IMAGE_VERSION | tr -d '\n' | tee /tekton/results/current-version
