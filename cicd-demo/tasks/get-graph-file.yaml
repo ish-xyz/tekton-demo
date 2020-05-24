@@ -14,7 +14,7 @@ spec:
   results:
   - name: current-version
     description: Current artefact version
-  - name: candidate-version
+  - name: rc-version
     description: Candidate artefact version
   steps:
   - name: store-candidate-version-number
@@ -22,13 +22,11 @@ spec:
     script: |
       #!/usr/bin/env bash
       source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
-      echo "$(( $DOCKER_IMAGE_VERSION + 1 ))"
-      echo "$(( $DOCKER_IMAGE_VERSION + 1 ))" | tr -d '\n' | tee /tekton/results/candidate-version
+      echo -ne "$(( $DOCKER_IMAGE_VERSION + 1 ))" | tee /tekton/results/rc-version
 
   - name: store-current-version-number
     image: bash:latest
     script: |
       #!/usr/bin/env bash
       source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
-      echo $DOCKER_IMAGE_VERSION
-      echo $DOCKER_IMAGE_VERSION | tr -d '\n' | tee /tekton/results/current-version
+      echo -ne $DOCKER_IMAGE_VERSION | tee /tekton/results/current-version

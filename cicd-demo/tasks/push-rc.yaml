@@ -1,13 +1,13 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: build-candidate
+  name: push-rc
   namespace: tekton-demo
 spec:
   params:
   - name: dockerfile-path
     type: string
-  - name: candidate-version
+  - name: rc-version
     type: string
   resources:
     inputs:
@@ -18,16 +18,8 @@ spec:
       type: image
 
   steps:
-  # - name: debug
-  #   image: bash:latest
-  #   script: |
-  #     #!/usr/bin/env bash
-  #     echo '$(params.candidate-version)' > debug.txt
-  #     sleep 3600
-  
-  - name: build-push-candidate
+  - name: push-rc
     image: gcr.io/kaniko-project/executor:v0.20.0
-    # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
     env:
     - name: "DOCKER_CONFIG"
       value: "/tekton/home/.docker/"
@@ -35,7 +27,6 @@ spec:
     - /kaniko/executor
     args: [
       "--dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile",
-      "--destination=$(resources.outputs.docker-app-image.url):candidate-$(params.candidate-version)",
+      "--destination=$(resources.outputs.docker-app-image.url):$(params.rc-version)",
       "--context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)"
     ]
-

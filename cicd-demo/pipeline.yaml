@@ -29,18 +29,29 @@ spec:
           - name: git-graph-files
             resource: git-graph-files
 
-    - name: build-candidate
+    - name: push-rc
       taskRef:
-        name: build-candidate
+        name: push-rc
       params:
         - name: dockerfile-path
           value: "$(params.dockerfile-path)"
-        - name: candidate-version
-          value: $(tasks.get-graph-file.results.candidate-version)
+        - name: rc-version
+          value: "rc-$(tasks.get-graph-file.results.rc-version)"
       resources:
         inputs:
           - name: git-app-source
             resource: git-app-source
+        outputs:
+          - name: docker-app-image
+            resource: docker-app-image
+
+    - name: test-release-candidate
+      taskRef:
+        name: test-rc
+      params:
+        - name: rc-version
+          value: "rc-$(tasks.get-graph-file.results.rc-version)"
+      resources:
         outputs:
           - name: docker-app-image
             resource: docker-app-image
