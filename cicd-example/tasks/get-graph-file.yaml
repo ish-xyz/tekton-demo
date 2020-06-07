@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: get-graph-file
+  namespace: tekton-demo
+spec:
+  params:
+  - name: app-name
+    type: string
+  resources:
+    inputs:
+    - name: git-graph-files
+      type: git
+  results:
+  - name: current-version
+    description: Current artefact version
+  - name: rc-version
+    description: Candidate artefact version
+  steps:
+  - name: store-candidate-version-number
+    image: bash:latest
+    script: |
+      #!/usr/bin/env bash
+      source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
+      echo -ne "$(( $DOCKER_IMAGE_VERSION + 1 ))" | tee /tekton/results/rc-version
+
+  - name: store-current-version-number
+    image: bash:latest
+    script: |
+      #!/usr/bin/env bash
+      source $(resources.inputs.git-graph-files.path)/graph-files/$(params.app-name)/graph.source
+      echo -ne $DOCKER_IMAGE_VERSION | tee /tekton/results/current-version

@@ -1,0 +1,26 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tekton-demo-app-ci
+  namespace: tekton-demo
+spec:
+  params:
+  - name: git-app-source-rev
+    value: $(body.head_commit.id)
+  - name: git-app-source-url
+    value: $(body.repository.url)
+  - name: dockerfile-path
+    value: '/src'
+
+  - name: docker-app-image
+    value: ishario/tektoncd-demo
+  - name: service-account
+    value: docker-hub-ishario
+
+  - name: git-graph-files-rev
+    value: master
+  - name: git-graph-files-url
+    value: https://github.com/ish-xyz/tekton-demo.git
+  - name: app-name
+    value: 'tekton-demo'
+

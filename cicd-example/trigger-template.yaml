@@ -1,0 +1,53 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: tekton-demo-app-ci
+  namespace: tekton-demo
+spec:
+  params:
+  - name: git-graph-files-rev
+  - name: git-graph-files-url
+  - name: app-name
+  - name: git-app-source-rev
+  - name: git-app-source-url
+  - name: dockerfile-path
+  - name: docker-app-image
+
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: app-ci-run-
+    spec:
+      serviceAccountName: $(params.service-account)
+      pipelineRef:
+        name: ci
+      resources:
+      - name: git-app-source
+        resourceSpec:
+          type: git
+          params:
+            - name: revision
+              value: $(params.git-app-source-rev)
+            - name: url
+              value: $(params.git-app-source-url)
+      - name: git-graph-files
+        resourceSpec:
+          type: git
+          params:
+          - name: revision
+            value: $(params.git-graph-files-rev)
+          - name: url
+            value: $(params.git-graph-files-url)
+
+      - name: docker-app-image
+        resourceSpec:
+          type: image
+          params:
+          - name: url
+            value: $(params.docker-app-image)
+      params:
+      - name: dockerfile-path
+        value: $(params.dockerfile-path)
+      - name: app-name
+        value: $(params.app-name)

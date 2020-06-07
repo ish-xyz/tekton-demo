@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: test-rc
+  namespace: tekton-demo
+spec:
+  params:
+  - name: rc-version
+    type: string
+  resources:
+    outputs:
+    - name: docker-app-image
+      type: image
+
+  steps:
+  - name: test-rc
+    image: $(resources.outputs.docker-app-image.url):$(params.rc-version)
+    script: |
+      #!/usr/bin/env sh
+      sleep 300
+      echo "testing image"

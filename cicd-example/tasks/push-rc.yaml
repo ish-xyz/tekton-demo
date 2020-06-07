@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-rc
+  namespace: tekton-demo
+spec:
+  params:
+  - name: dockerfile-path
+    type: string
+  - name: rc-version
+    type: string
+  resources:
+    inputs:
+    - name: git-app-source
+      type: git
+    outputs:
+    - name: docker-app-image
+      type: image
+
+  steps:
+  - name: push-rc
+    image: gcr.io/kaniko-project/executor:v0.20.0
+    env:
+    - name: "DOCKER_CONFIG"
+      value: "/tekton/home/.docker/"
+    command:
+    - /kaniko/executor
+    args: [
+      "--dockerfile=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)/Dockerfile",
+      "--destination=$(resources.outputs.docker-app-image.url):$(params.rc-version)",
+      "--context=$(resources.inputs.git-app-source.path)/$(params.dockerfile-path)"
+    ]
