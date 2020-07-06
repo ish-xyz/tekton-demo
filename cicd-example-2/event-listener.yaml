@@ -4,7 +4,7 @@ metadata:
   name: tekton-demo-el
   namespace: tekton-demo
 spec:
-  serviceAccountName: tekton-triggers-1590086083
+  serviceAccountName: tekton-triggers-1593528915
   triggers:
     - bindings:
       - name: tekton-demo-app-ci

@@ -5,53 +5,26 @@ metadata:
   namespace: tekton-demo
 spec:
   resources:
-  - name: git-app-source
+  - name: git-repo
     type: git
-  - name: git-graph-files
-    type: git
-  - name: docker-app-image
+  - name: docker-image
     type: image
   params:
-    - name: dockerfile-path
-      type: string
     - name: app-name
+      type: string
+    - name: git-message
       type: string
 
   tasks:
-    - name: get-graph-file
+    - name: get-rc-version
       taskRef:
-        name: get-graph-file
+        name: get-rc-version
       params:
         - name: app-name
           value: $(params.app-name)
+        - name: git-message
+          value: $(params.git-message)
       resources:
         inputs:
-          - name: git-graph-files
-            resource: git-graph-files
-
-    - name: push-rc
-      taskRef:
-        name: push-rc
-      params:
-        - name: dockerfile-path
-          value: "$(params.dockerfile-path)"
-        - name: rc-version
-          value: "rc-$(tasks.get-graph-file.results.rc-version)"
-      resources:
-        inputs:
-          - name: git-app-source
-            resource: git-app-source
-        outputs:
-          - name: docker-app-image
-            resource: docker-app-image
-
-    - name: test-release-candidate
-      taskRef:
-        name: test-rc
-      params:
-        - name: rc-version
-          value: "rc-$(tasks.get-graph-file.results.rc-version)"
-      resources:
-        outputs:
-          - name: docker-app-image
-            resource: docker-app-image
+          - name: git-repo
+            resource: git-repo

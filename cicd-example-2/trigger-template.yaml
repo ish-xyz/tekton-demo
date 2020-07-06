@@ -5,13 +5,13 @@ metadata:
   namespace: tekton-demo
 spec:
   params:
-  - name: git-graph-files-rev
-  - name: git-graph-files-url
+  params:
+  - name: git-commit
+  - name: git-url
+  - name: git-message
+  - name: docker-image
+  - name: registry-sa
   - name: app-name
-  - name: git-app-source-rev
-  - name: git-app-source-url
-  - name: dockerfile-path
-  - name: docker-app-image
 
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
@@ -19,35 +19,26 @@ spec:
     metadata:
       generateName: app-ci-run-
     spec:
-      serviceAccountName: $(params.service-account)
+      serviceAccountName: $(params.registry-sa)
       pipelineRef:
         name: ci
       resources:
-      - name: git-app-source
-        resourceSpec:
-          type: git
-          params:
-            - name: revision
-              value: $(params.git-app-source-rev)
-            - name: url
-              value: $(params.git-app-source-url)
-      - name: git-graph-files
+      - name: git-repo
         resourceSpec:
           type: git
           params:
           - name: revision
-            value: $(params.git-graph-files-rev)
+            value: $(params.git-commit)
           - name: url
-            value: $(params.git-graph-files-url)
-
-      - name: docker-app-image
+            value: $(params.git-url)
+      - name: docker-image
         resourceSpec:
           type: image
           params:
           - name: url
-            value: $(params.docker-app-image)
+            value: $(params.docker-image)
       params:
-      - name: dockerfile-path
-        value: $(params.dockerfile-path)
       - name: app-name
         value: $(params.app-name)
+      - name: git-message
+        value: $(params.git-message)

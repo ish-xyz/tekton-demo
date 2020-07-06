@@ -5,22 +5,16 @@ metadata:
   namespace: tekton-demo
 spec:
   params:
-  - name: git-app-source-rev
+  - name: git-commit
     value: $(body.head_commit.id)
-  - name: git-app-source-url
+  - name: git-url
     value: $(body.repository.url)
-  - name: dockerfile-path
-    value: '/src'
-
-  - name: docker-app-image
+  - name: git-message
+    value: $(body.head_commit.message)
+  - name: docker-image
     value: ishario/tektoncd-demo
-  - name: service-account
+  - name: registry-sa
     value: docker-hub-ishario
-
-  - name: git-graph-files-rev
-    value: master
-  - name: git-graph-files-url
-    value: https://github.com/ish-xyz/tekton-demo.git
   - name: app-name
     value: 'tekton-demo'
 

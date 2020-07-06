@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: get-rc-version
+  namespace: tekton-demo
+spec:
+  params:
+  - name: app-name
+    type: string
+  - name: git-message
+    type: string
+
+  resources:
+    inputs:
+    - name: git-repo
+      type: git
+
+  results:
+  - name: rc-version
+    description: Candidate artefact version
+
+  steps:
+  - name: get-rc-version
+    image: alpine/git:latest
+    script: |
+      #!/bin/sh
+      # Create RC version
+      git clone https://github.com/ish-xyz/shell-semver.git
+      CURRENT_TAG=`cd $(resources.inputs.git-repo.path) && git describe --tags --abbrev=0`
+      [[ -z ${CURRENT_TAG} ]] && CURRENT_TAG=0.0.0
+      if [[ $(params.git-message) =~ ^MAJOR ]]; then
+        CMD="-M"
+      elif [[ $(params.git-message) =~ ^MINOR ]]; then
+        CMD="-m"
+      else
+        CMD="-p"
+      fi
+
+      echo -ne "rc-`./shell-semver/increment_version.sh -p ${CURRENT_TAG}`" > /tekton/results/rc-version
+
+
+
