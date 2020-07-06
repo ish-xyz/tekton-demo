@@ -21,22 +21,22 @@ spec:
 
   steps:
   - name: get-rc-version
-    image: alpine/git:latest
+    image: bash:latest
     script: |
-      #!/bin/sh
+      #!/usr/bin/env bash
       # Create RC version
-      git clone https://github.com/ish-xyz/shell-semver.git
-      CURRENT_TAG=`cd $(resources.inputs.git-repo.path) && git describe --tags --abbrev=0`
+      apk add git
+      wget "https://raw.githubusercontent.com/ish-xyz/shell-semver/master/increment_version.sh"
+      chmod +x increment_version.sh
+      CURRENT_TAG=`cd $(resources.inputs.git-repo.path) && git tag -l | sort -V | tail -n1`
       [[ -z ${CURRENT_TAG} ]] && CURRENT_TAG=0.0.0
-      if [[ $(params.git-message) =~ ^MAJOR ]]; then
+      if [[ "$(params.git-message)" =~ ^MAJOR: ]]; then
         CMD="-M"
-      elif [[ $(params.git-message) =~ ^MINOR ]]; then
+      elif [[ "$(params.git-message)" =~ ^MINOR: ]]; then
         CMD="-m"
       else
         CMD="-p"
       fi
 
-      echo -ne "rc-`./shell-semver/increment_version.sh -p ${CURRENT_TAG}`" > /tekton/results/rc-version
-
-
+      echo -ne "rc-`bash ./increment_version.sh -p ${CURRENT_TAG}`" | tee -a /tekton/results/rc-version
 

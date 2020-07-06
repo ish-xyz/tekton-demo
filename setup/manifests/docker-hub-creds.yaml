@@ -8,7 +8,7 @@ metadata:
 type: kubernetes.io/basic-auth
 stringData:
     username: ishario
-    password: 'xxx'
+    password: ''
 ---
 apiVersion: v1
 kind: ServiceAccount
