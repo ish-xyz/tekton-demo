@@ -5,8 +5,6 @@ metadata:
   namespace: tekton-demo
 spec:
   params:
-  - name: app-name
-    type: string
   - name: git-message
     type: string
 

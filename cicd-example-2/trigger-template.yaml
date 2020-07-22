@@ -15,13 +15,33 @@ spec:
 
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
-    kind: PipelineRun
+    kind: TaskRun
     metadata:
-      generateName: app-ci-run-
+      generateName: get-rc-version-
+    spec:
+      taskref:
+        name: get-rc-version
+      resources:
+      - name: git-repo
+        resourceSpec:
+          type: git
+          params:
+          - name: revision
+            value: $(params.git-commit)
+          - name: url
+            value: $(params.git-url)
+      params:
+      - name: git-message
+        value: $(params.git-message)
+
+  - apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: build-docker-image-
     spec:
       serviceAccountName: $(params.registry-sa)
-      pipelineRef:
-        name: ci
+      taskref:
+        name: build-docker-image
       resources:
       - name: git-repo
         resourceSpec:
@@ -38,7 +58,5 @@ spec:
           - name: url
             value: $(params.docker-image)
       params:
-      - name: app-name
-        value: $(params.app-name)
-      - name: git-message
-        value: $(params.git-message)
+      - name: rc-version
+        value: $(tasks.get-rc-version.results.rc-version)
