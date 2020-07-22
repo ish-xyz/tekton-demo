@@ -95,6 +95,8 @@ rules:
   - apiGroups:
     - tekton.dev
     resources:
+    - taskresources
+    - taskruns
     - pipelineruns
     - pipelineresources
     verbs:
