@@ -38,5 +38,5 @@ spec:
         CMD="-p"
       fi
 
-      echo -ne "rc-`bash ./increment_version.sh -p ${CURRENT_TAG}`" | tee -a /tekton/results/rc-version
+      echo -ne "rc-`bash ./increment_version.sh -p ${CURRENT_TAG}`" > /tekton/results/rc-version
 

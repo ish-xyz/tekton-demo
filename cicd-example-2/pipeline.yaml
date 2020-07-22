@@ -4,6 +4,7 @@ metadata:
   name: ci
   namespace: tekton-demo
 spec:
+
   resources:
   - name: git-repo
     type: git
@@ -16,6 +17,7 @@ spec:
       type: string
 
   tasks:
+
     - name: get-rc-version
       taskRef:
         name: get-rc-version
@@ -28,3 +30,17 @@ spec:
         inputs:
           - name: git-repo
             resource: git-repo
+
+    - name: build-rc-image
+      taskRef:
+        name: build-docker-image
+      params:
+        - name: rc-version
+          value: $(tasks.get-rc-version.results.rc-version)
+      resources:
+        inputs:
+          - name: git-repo
+            resource: git-repo
+        outputs:
+          - name: docker-image
+            resource: docker-image
